@@ -1,0 +1,34 @@
+package com.nscaled.goldfinger.cafs.model;
+
+option java_outer_classname = "Proto";
+
+// use protobuf-dt eclipse plugin to generate classes based off this file
+
+/**
+ * Used to efficiently serialize part content messages between CAFS and clients
+ */
+message DownloadPartsRequest {
+	//option java_package = "com.nscaled.goldfinger.cafs.model"
+	repeated string parts = 1;
+}
+
+message DownloadPartsResponse {
+	repeated string missingPartHashes = 1;
+	repeated string foundPartHashes = 2;
+	repeated bytes foundPartContents = 3;
+	// those are empty if everything is ok
+	optional string errorCode = 4;
+	optional string errorMessage = 5;
+}
+
+message UploadPartsRequest {
+
+	// FilePart with fileVersionId and index of the part
+	message FilePartUpload {
+		required string fileVersionKey = 1;
+		required int64 index = 2;
+		required bytes content = 3;
+	}
+
+	repeated FilePartUpload filePart = 1;
+}

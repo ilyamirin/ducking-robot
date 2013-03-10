@@ -1,0 +1,11 @@
+package com.nscaled.goldfinger.cafs.model;
+
+option java_outer_classname = "DbProto";
+
+/**
+ * Used to serialize file metadata stored in our Cassandra DB
+ */
+message DbFileMeta {
+	required bool folder = 1;
+	optional string mime = 2;
+}
