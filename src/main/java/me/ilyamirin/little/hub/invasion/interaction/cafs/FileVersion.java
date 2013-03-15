@@ -1,11 +1,10 @@
-package me.ilyamirin.little.hub.invasion.models;
+package me.ilyamirin.little.hub.invasion.interaction.cafs;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
 public class FileVersion {

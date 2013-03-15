@@ -1,4 +1,4 @@
-package me.ilyamirin.little.hub.invasion.models;
+package me.ilyamirin.little.hub.invasion.interaction;
 
 import java.io.IOException;
 import java.io.OutputStream;

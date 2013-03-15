@@ -1,4 +1,4 @@
-package me.ilyamirin.little.hub.invasion.models;
+package me.ilyamirin.little.hub.invasion.interaction.cafs;
 
 import lombok.ToString;
 import org.codehaus.jackson.annotate.JsonSubTypes;

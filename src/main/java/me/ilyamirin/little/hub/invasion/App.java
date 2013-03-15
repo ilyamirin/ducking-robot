@@ -7,7 +7,7 @@ import jcifs.smb.SmbFile;
 import me.ilyamirin.little.hub.invasion.clients.CAFSClient;
 import lombok.extern.slf4j.Slf4j;
 import me.ilyamirin.little.hub.invasion.clients.ConsoleClient;
-import me.ilyamirin.little.hub.invasion.models.FileVersionIdentifier;
+import me.ilyamirin.little.hub.invasion.interaction.cafs.FileVersionIdentifier;
 
 @Slf4j
 public class App {
@@ -17,6 +17,8 @@ public class App {
         String password = null;
         String targetId = null;
         String action = null;
+        String pathTo = null;
+        String consoleLocation = null;
 
         for (int i = 0; i < args.length; i += 2) {
             if (args[i].equals("--uuid")) {
@@ -25,6 +27,10 @@ public class App {
                 password = args[i + 1];
             } else if (args[i].equals("--target")) {
                 targetId = args[i + 1];
+            } else if (args[i].equals("--path")) {
+                pathTo = args[i + 1];
+            } else if (args[i].equals("--console")) {
+                consoleLocation = args[i + 1];
             } else if (args[i].equals("--action")) {
                 action = args[i + 1];
             }
@@ -43,7 +49,7 @@ public class App {
             log.info("Finish clearing of {} broken versions.", brokenVersions.size());
 
             SmbProcessor processor = new SmbProcessor(client, sessionHolder);
-            SmbFile root = new SmbFile("smb://127.0.0.1/Temp/");
+            SmbFile root = new SmbFile(pathTo);
             log.info("Start backup of {}", root);
             processor.process(root, "/", targetId, true);
             log.info("Finish backup of {}", root);

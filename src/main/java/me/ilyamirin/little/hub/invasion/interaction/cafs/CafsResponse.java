@@ -1,4 +1,4 @@
-package me.ilyamirin.little.hub.invasion.models;
+package me.ilyamirin.little.hub.invasion.interaction.cafs;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

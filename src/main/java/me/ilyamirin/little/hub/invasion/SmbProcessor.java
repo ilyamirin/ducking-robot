@@ -1,22 +1,18 @@
 package me.ilyamirin.little.hub.invasion;
 
 import me.ilyamirin.little.hub.invasion.clients.CAFSClient;
-import com.google.common.collect.Sets;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Random;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
 import jcifs.smb.SmbFileInputStream;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import me.ilyamirin.little.hub.invasion.models.File;
-import me.ilyamirin.little.hub.invasion.models.FilePartUpload;
-import me.ilyamirin.little.hub.invasion.models.FileVersion;
+import me.ilyamirin.little.hub.invasion.interaction.cafs.File;
+import me.ilyamirin.little.hub.invasion.interaction.cafs.FilePartUpload;
+import me.ilyamirin.little.hub.invasion.interaction.cafs.FileVersion;
 
 /**
  *

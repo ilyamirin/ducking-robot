@@ -1,5 +1,6 @@
-package me.ilyamirin.little.hub.invasion.models;
+package me.ilyamirin.little.hub.invasion.interaction.cafs;
 
+import me.ilyamirin.little.hub.invasion.interaction.cafs.FileVersion;
 import javax.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 
