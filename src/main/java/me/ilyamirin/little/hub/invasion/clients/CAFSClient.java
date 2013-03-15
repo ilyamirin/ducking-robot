@@ -1,4 +1,4 @@
-package me.ilyamirin.little.hub.invasion;
+package me.ilyamirin.little.hub.invasion.clients;
 
 import me.ilyamirin.little.hub.invasion.models.FilePartUpload;
 import me.ilyamirin.little.hub.invasion.models.ProtobufMessageBodyReader;
@@ -11,10 +11,15 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import java.util.Collection;
+import java.util.List;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
+import me.ilyamirin.little.hub.invasion.models.CafsResponse;
 import me.ilyamirin.little.hub.invasion.models.CreateFileVersionRequest;
 import me.ilyamirin.little.hub.invasion.models.FileVersion;
+import me.ilyamirin.little.hub.invasion.models.FileVersionIdentifier;
+import me.ilyamirin.little.hub.invasion.models.ListBrokenVersionsResponse;
+import me.ilyamirin.little.hub.invasion.models.ResponseEntity;
 import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -49,7 +54,7 @@ public class CAFSClient {
     }
 
     public void uploadChunks(Collection<FilePartUpload> partUploads, String sessionId) {
-        log.info("Start uploading: {} parts will be uploaded.", partUploads.size());
+        log.trace("Start uploading: {} parts will be uploaded.", partUploads.size());
 
         Proto.UploadPartsRequest.Builder requestBuilder = Proto.UploadPartsRequest.newBuilder();
         for (FilePartUpload upload : partUploads) {
@@ -87,7 +92,7 @@ public class CAFSClient {
          log.trace("Output from Server .... \n");
          log.trace(output);
          */
-        log.info("Finish uploading {} parts were successfully uploaded.", partUploads.size());
+        log.trace("Finish uploading {} parts were successfully uploaded.", partUploads.size());
     }
 
     public void createNewFileVersion(FileVersion fileVersion, String sessionId) {
@@ -100,11 +105,32 @@ public class CAFSClient {
         WebResource webResource = client
                 .resource("http://localhost:30001/files/create");
 
-        ClientResponse res = webResource
+        CafsResponse<ResponseEntity> res = webResource
 				.type(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON)
-                .put(ClientResponse.class, request);
-
+                .put(CafsResponse.class, request);
+        if (res.hasErrors()) {
+            log.error("File version {} has not been created yet because: {}",
+                    fileVersion, res.getErrorMessage());
+            return;
+        }
         log.info("Done creating file.");
+    }
+
+    public List<FileVersionIdentifier> getBrokenVersions(String sessionId, String targetId) {
+        WebResource webResource = client.resource("http://localhost:30001/brokenVersions/list");
+        log.info("Going to CAFS instance {} and asking him about broken versions list for target {} with sessionId {}",
+                client, targetId, sessionId);
+        CafsResponse<ListBrokenVersionsResponse> response = webResource
+                .queryParam("targetId", targetId)
+                .queryParam("sessionId", sessionId)
+                .get(CafsResponse.class);
+        if (response.hasErrors()) {
+            log.error("Oops! {}", response.getErrorMessage());
+            return null;
+        }
+        log.info("{} broken versions have been found.",
+                response.getEntityFromResponse().getBrokenVersions().size());
+        return response.getEntityFromResponse().getBrokenVersions();
     }
 }
