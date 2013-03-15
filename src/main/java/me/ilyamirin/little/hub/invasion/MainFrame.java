@@ -4,12 +4,17 @@
  */
 package me.ilyamirin.little.hub.invasion;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import java.util.Properties;
+import jcifs.smb.SmbFile;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
  * @author ilamirin
  */
+@Slf4j
 public class MainFrame extends javax.swing.JFrame {
 
     /**
@@ -40,6 +45,8 @@ public class MainFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         hubUUIDTextField.setText("Hub UUID");
+        hubUUIDTextField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        hubUUIDTextField.setDoubleBuffered(true);
         hubUUIDTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 hubUUIDTextFieldActionPerformed(evt);
@@ -144,6 +151,25 @@ public class MainFrame extends javax.swing.JFrame {
         properties.setProperty("password", hubPasswordTextField.getText());
         properties.setProperty("targetId", targetUUIDTextField.getText());
         properties.setProperty("path", pathToSambaShareTextField.getText());
+
+        log.info("Properties has been loaded: {}", properties);
+
+        Injector injector = Guice.createInjector(new NanoPodModule(properties));
+
+        log.info("Backup has been started.");
+
+        if (actionGroup.getSelection().equals(backUpButton.getModel())) {
+            try {
+                SmbProcessor processor = injector.getInstance(SmbProcessor.class);
+                SmbFile root = new SmbFile(properties.getProperty("path"));
+
+                log.info("Start backup of {}", root);
+                processor.process(root, "/", properties.getProperty("targetId"), true);
+                log.info("Finish backup of {}", root);
+            } catch (Exception ex) {
+                log.error("Oops!", ex);
+            }
+        }
     }//GEN-LAST:event_runButtonMouseClicked
 
     /**

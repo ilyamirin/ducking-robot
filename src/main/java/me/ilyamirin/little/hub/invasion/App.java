@@ -1,5 +1,8 @@
 package me.ilyamirin.little.hub.invasion;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import me.ilyamirin.little.hub.invasion.cache.Cache;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import java.io.FileInputStream;
@@ -20,10 +23,7 @@ public class App {
 
         log.info("Properties has been loaded: {}", properties);
 
-        CAFSClient client = CAFSClient.build();
-        Cache cache = new Cache();
-        ConsoleClient authClient = new ConsoleClient(properties, new XStream(new StaxDriver()));
-        SessionHolder sessionHolder = new SessionHolder(properties, authClient, cache);
+        Injector injector = Guice.createInjector(new NanoPodModule(properties));
 
         if (args[1].equals("backup")) {
             log.info("Backup has been started.");
@@ -35,8 +35,8 @@ public class App {
                     properties.getProperty("targetId"));
             log.info("Finish clearing of {} broken versions.", brokenVersions.size());
             */
-            
-            SmbProcessor processor = new SmbProcessor(client, sessionHolder, cache);
+
+            SmbProcessor processor = injector.getInstance(SmbProcessor.class);
             SmbFile root = new SmbFile(properties.getProperty("path"));
 
             log.info("Start backup of {}", root);

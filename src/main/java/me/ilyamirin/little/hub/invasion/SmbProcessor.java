@@ -1,5 +1,7 @@
 package me.ilyamirin.little.hub.invasion;
 
+import com.google.inject.Inject;
+import me.ilyamirin.little.hub.invasion.cache.Cache;
 import me.ilyamirin.little.hub.invasion.clients.CAFSClient;
 import java.io.IOException;
 import java.util.Collection;
@@ -19,22 +21,28 @@ import me.ilyamirin.little.hub.invasion.interaction.cafs.FileVersion;
  * @author ilamirin
  */
 @Slf4j
-@AllArgsConstructor
 public class SmbProcessor {
 
     private static final int CHUNK_SIZE = 64000;
     private static final int CHUNK_BUCKET_SIZE = 5;
+
     private CAFSClient client;
     private SessionHolder sessionHolder;
     private Cache cache;
 
+    @Inject
+    public SmbProcessor(CAFSClient client, SessionHolder sessionHolder, Cache cache) {
+        this.client = client;
+        this.sessionHolder = sessionHolder;
+        this.cache = cache;
+    }
+
     private void processFile(SmbFile smbFile, String pathTo, String targetId) throws SmbException, IOException {
-        log.info("File {} has been found and he wanna {} bytes of disk space.",
-                smbFile.getName(), smbFile.length());
+        log.info("File {} has been found.", smbFile.getPath());
 
         String smbFileCacheKey = smbFile.getPath().concat(pathTo).concat(targetId);
         if (cache.contains(smbFileCacheKey)) {
-            log.info("File {} has been already processed at {}.",
+            log.trace("File {} has been already processed at {}.",
                     smbFile, cache.get(smbFileCacheKey, Date.class));
             return;
         }
@@ -101,7 +109,7 @@ public class SmbProcessor {
 
     public void process(SmbFile root, String pathTo, String targetId, boolean isRoot) throws SmbException, IOException {
         if (root.isDirectory()) {
-            log.info("Directory {} has been found and she wanna {} bytes of a disk space.",
+            log.trace("Directory {} has been found and she wanna {} bytes of a disk space.",
                     root.getPath(), root.length());
 
             String pathToSmbFiles = isRoot ? pathTo : pathTo + root.getName();

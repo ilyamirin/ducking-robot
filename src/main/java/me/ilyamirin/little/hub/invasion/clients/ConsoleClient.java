@@ -1,5 +1,6 @@
 package me.ilyamirin.little.hub.invasion.clients;
 
+import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.thoughtworks.xstream.XStream;
@@ -11,23 +12,27 @@ import javax.ws.rs.core.MediaType;
 import jcifs.util.Base64;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.ilyamirin.little.hub.invasion.models.AuthSessionRequest;
 import me.ilyamirin.little.hub.invasion.models.AuthSessionResponse;
 import me.ilyamirin.little.hub.invasion.models.AuthSessionTypeEnum;
 
 @Slf4j
-@AllArgsConstructor
 public class ConsoleClient {
 
-    @NonNull
     private Properties properties;
-    @NonNull
     private XStream xs;
 
     private static final String consoleBaseUrl = "http://localhost";
 	private static final String AUTHENTICATION_URL = "/service/pod_service/auth_session";
 	private static final String AUTHENTICATION_CHECK_URL = "/service/cafs_service/auth_session_validate";
+
+    @Inject
+    public ConsoleClient(Properties properties, XStream xs) {
+        this.properties = properties;
+        this.xs = xs;
+    }
 
 	String generateToken() {
 		StringBuilder tokenComponents = new StringBuilder();

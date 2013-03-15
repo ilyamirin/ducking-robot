@@ -1,29 +1,26 @@
 package me.ilyamirin.little.hub.invasion;
 
+import com.google.inject.Inject;
+import me.ilyamirin.little.hub.invasion.cache.Cache;
 import java.util.Properties;
-import java.util.SortedMap;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Synchronized;
 import me.ilyamirin.little.hub.invasion.clients.ConsoleClient;
-import org.apache.jdbm.DB;
-import org.apache.jdbm.DBMaker;
 
 /**
  *
  * @author ilamirin
  */
-@Data
-@RequiredArgsConstructor
 public class SessionHolder {
 
-    @NonNull
     private Properties properties;
-    @NonNull
     private ConsoleClient client;
-    @NonNull
     private Cache cache;
+
+    @Inject
+    public SessionHolder(Properties properties, ConsoleClient client, Cache cache) {
+        this.properties = properties;
+        this.client = client;
+        this.cache = cache;
+    }
 
     public String getSessionId() {
         String sessionId = cache.get("sessionId", String.class);

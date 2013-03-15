@@ -31,9 +31,6 @@ public class CAFSClient {
         this.client = client1;
     }
 
-    private CAFSClient() {
-    }
-
     public static CAFSClient build() {
         ObjectMapper mapper = new ObjectMapper();
         //mapper.getDeserializationConfig().addMixInAnnotations(CafsResponse.class, MixIn.class);
