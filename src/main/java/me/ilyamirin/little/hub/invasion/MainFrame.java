@@ -4,6 +4,8 @@
  */
 package me.ilyamirin.little.hub.invasion;
 
+import java.util.Properties;
+
 /**
  *
  * @author ilamirin
@@ -27,45 +29,50 @@ public class MainFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         actionGroup = new javax.swing.ButtonGroup();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        hubUUIDTextField = new javax.swing.JTextField();
+        hubPasswordTextField = new javax.swing.JTextField();
+        targetUUIDTextField = new javax.swing.JTextField();
+        pathToSambaShareTextField = new javax.swing.JTextField();
         runButton = new javax.swing.JButton();
         backUpButton = new javax.swing.JRadioButton();
         restoreButton = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextField1.setText("Hub UUID");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        hubUUIDTextField.setText("Hub UUID");
+        hubUUIDTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                hubUUIDTextFieldActionPerformed(evt);
             }
         });
 
-        jTextField2.setText("Hub password");
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        hubPasswordTextField.setText("Hub password");
+        hubPasswordTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                hubPasswordTextFieldActionPerformed(evt);
             }
         });
 
-        jTextField3.setText("Traget UUID");
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        targetUUIDTextField.setText("Traget UUID");
+        targetUUIDTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                targetUUIDTextFieldActionPerformed(evt);
             }
         });
 
-        jTextField4.setText("smb://127.0.0.1/test");
-        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+        pathToSambaShareTextField.setText("smb://127.0.0.1/test");
+        pathToSambaShareTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
+                pathToSambaShareTextFieldActionPerformed(evt);
             }
         });
 
         runButton.setText("Run");
+        runButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                runButtonMouseClicked(evt);
+            }
+        });
 
         actionGroup.add(backUpButton);
         backUpButton.setSelected(true);
@@ -86,23 +93,23 @@ public class MainFrame extends javax.swing.JFrame {
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(restoreButton))
                     .add(runButton)
-                    .add(jTextField4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 268, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jTextField3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 268, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jTextField2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 268, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jTextField1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 268, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(pathToSambaShareTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 268, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(targetUUIDTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 268, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(hubPasswordTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 268, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(hubUUIDTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 268, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .add(14, 14, 14)
-                .add(jTextField1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(hubUUIDTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(14, 14, 14)
-                .add(jTextField2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(hubPasswordTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(14, 14, 14)
-                .add(jTextField3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(targetUUIDTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(14, 14, 14)
-                .add(jTextField4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(pathToSambaShareTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(14, 14, 14)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(backUpButton)
@@ -115,21 +122,29 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void hubUUIDTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hubUUIDTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_hubUUIDTextFieldActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void hubPasswordTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hubPasswordTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_hubPasswordTextFieldActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void targetUUIDTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetUUIDTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_targetUUIDTextFieldActionPerformed
 
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+    private void pathToSambaShareTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pathToSambaShareTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
+    }//GEN-LAST:event_pathToSambaShareTextFieldActionPerformed
+
+    private void runButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_runButtonMouseClicked
+        Properties properties = new Properties();
+        properties.setProperty("uuid", hubUUIDTextField.getText());
+        properties.setProperty("password", hubPasswordTextField.getText());
+        properties.setProperty("targetId", targetUUIDTextField.getText());
+        properties.setProperty("path", pathToSambaShareTextField.getText());
+    }//GEN-LAST:event_runButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -168,11 +183,11 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup actionGroup;
     private javax.swing.JRadioButton backUpButton;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField hubPasswordTextField;
+    private javax.swing.JTextField hubUUIDTextField;
+    private javax.swing.JTextField pathToSambaShareTextField;
     private javax.swing.JRadioButton restoreButton;
     private javax.swing.JButton runButton;
+    private javax.swing.JTextField targetUUIDTextField;
     // End of variables declaration//GEN-END:variables
 }

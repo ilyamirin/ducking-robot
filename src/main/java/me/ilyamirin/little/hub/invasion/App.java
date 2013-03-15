@@ -28,12 +28,14 @@ public class App {
         if (args[1].equals("backup")) {
             log.info("Backup has been started.");
 
+            /*
             log.info("Start clearing of broken versions.");
             List<FileVersionIdentifier> brokenVersions = client.getBrokenVersions(
                     authClient.startSessionForTarget(properties.getProperty("targetId")),
                     properties.getProperty("targetId"));
             log.info("Finish clearing of {} broken versions.", brokenVersions.size());
-
+            */
+            
             SmbProcessor processor = new SmbProcessor(client, sessionHolder, cache);
             SmbFile root = new SmbFile(properties.getProperty("path"));
 
