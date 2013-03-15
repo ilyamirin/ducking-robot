@@ -6,9 +6,11 @@ import com.thoughtworks.xstream.XStream;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Properties;
 import javax.ws.rs.core.MediaType;
 import jcifs.util.Base64;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import me.ilyamirin.little.hub.invasion.models.AuthSessionRequest;
 import me.ilyamirin.little.hub.invasion.models.AuthSessionResponse;
@@ -18,17 +20,19 @@ import me.ilyamirin.little.hub.invasion.models.AuthSessionTypeEnum;
 @AllArgsConstructor
 public class ConsoleClient {
 
+    @NonNull
+    private Properties properties;
+    @NonNull
+    private XStream xs;
+
     private static final String consoleBaseUrl = "http://localhost";
 	private static final String AUTHENTICATION_URL = "/service/pod_service/auth_session";
 	private static final String AUTHENTICATION_CHECK_URL = "/service/cafs_service/auth_session_validate";
-    private String password;
-    private String uuid;
-    private XStream xs;
 
 	String generateToken() {
 		StringBuilder tokenComponents = new StringBuilder();
-		tokenComponents.append(uuid);
-		tokenComponents.append(password);
+		tokenComponents.append(properties.get("uuid"));
+		tokenComponents.append(properties.get("password"));
 		try {
 			byte[]  bytesOfMessage = tokenComponents.toString().getBytes("UTF-8");
 			MessageDigest md = MessageDigest.getInstance("MD5");
@@ -42,12 +46,12 @@ public class ConsoleClient {
 		}
 	}
 
-    public String startSession(String targetId) {
-        log.info("Asking console about a session for me.");
+    public String startSessionForTarget(String targetId) {
+        log.info("Asking console about a session for target {}.", targetId);
         AuthSessionRequest request = new AuthSessionRequest();
         request.setSessionType(AuthSessionTypeEnum.HUB);
         request.setToken(generateToken());
-        request.setUuid(uuid);
+        request.setUuid(properties.getProperty("uuid"));
         request.setCorrelationId(targetId);
 
         Client client = Client.create();

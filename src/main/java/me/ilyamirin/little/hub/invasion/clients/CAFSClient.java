@@ -112,7 +112,7 @@ public class CAFSClient {
     }
 
     public List<FileVersionIdentifier> getBrokenVersions(String sessionId, String targetId) {
-        WebResource webResource = client.resource("http://localhost:30001/brokenVersions/list");
+        WebResource webResource = client.resource("http://localhost:30001/brokenVersions/");
 
         log.info("Going to CAFS instance {} and asking him about broken versions list for target {} with sessionId {}",
                 client, targetId, sessionId);

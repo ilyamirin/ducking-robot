@@ -1,8 +1,10 @@
 package me.ilyamirin.little.hub.invasion;
 
+import java.util.Properties;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
 import me.ilyamirin.little.hub.invasion.clients.ConsoleClient;
 
 /**
@@ -14,14 +16,16 @@ import me.ilyamirin.little.hub.invasion.clients.ConsoleClient;
 public class SessionHolder {
 
     @NonNull
-    private String targetId;
+    private Properties properties;
     @NonNull
     private ConsoleClient client;
+
     private String sessionId;
 
+    @Synchronized
     public String getSessionId() {
         if (sessionId == null || sessionId.isEmpty()) {
-            sessionId = client.startSession(targetId);
+            sessionId = client.startSessionForTarget(properties.getProperty("targetId"));
         }
         return sessionId;
     }
