@@ -22,7 +22,7 @@ public class NanoPodModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(Properties.class).toInstance(p);
-        bind(CAFSClient.class).toInstance(CAFSClient.build());
+        bind(CAFSClient.class).toInstance(CAFSClient.build(p));
         bind(Cache.class).toInstance(Cache.build());
         bind(XStream.class).toInstance(new XStream(new StaxDriver()));
     }

@@ -24,9 +24,7 @@ public class ConsoleClient {
     private Properties properties;
     private XStream xs;
 
-    private static final String consoleBaseUrl = "http://localhost";
-	private static final String AUTHENTICATION_URL = "/service/pod_service/auth_session";
-	private static final String AUTHENTICATION_CHECK_URL = "/service/cafs_service/auth_session_validate";
+	private static final String AUTHENTICATION_URL = "service/pod_service/auth_session";
 
     @Inject
     public ConsoleClient(Properties properties, XStream xs) {
@@ -62,7 +60,7 @@ public class ConsoleClient {
         Client client = Client.create();
 
         ClientResponse response = client
-                .resource(consoleBaseUrl)
+                .resource(properties.getProperty("console.url"))
                 .path(AUTHENTICATION_URL)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .post(ClientResponse.class, request);

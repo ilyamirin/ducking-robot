@@ -6,7 +6,13 @@ package me.ilyamirin.little.hub.invasion;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
 import lombok.extern.slf4j.Slf4j;
 
@@ -80,6 +86,11 @@ public class MainFrame extends javax.swing.JFrame {
                 runButtonMouseClicked(evt);
             }
         });
+        runButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                runButtonActionPerformed(evt);
+            }
+        });
 
         actionGroup.add(backUpButton);
         backUpButton.setSelected(true);
@@ -113,7 +124,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .add(hubUUIDTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(14, 14, 14)
                 .add(hubPasswordTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(14, 14, 14)
+                .add(20, 20, 20)
                 .add(targetUUIDTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(14, 14, 14)
                 .add(pathToSambaShareTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -147,30 +158,29 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void runButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_runButtonMouseClicked
         Properties properties = new Properties();
+
         properties.setProperty("uuid", hubUUIDTextField.getText());
         properties.setProperty("password", hubPasswordTextField.getText());
         properties.setProperty("targetId", targetUUIDTextField.getText());
         properties.setProperty("path", pathToSambaShareTextField.getText());
 
-        log.info("Properties has been loaded: {}", properties);
-
-        Injector injector = Guice.createInjector(new NanoPodModule(properties));
-
-        log.info("Backup has been started.");
-
+        Goal goal = null;
         if (actionGroup.getSelection().equals(backUpButton.getModel())) {
-            try {
-                SmbProcessor processor = injector.getInstance(SmbProcessor.class);
-                SmbFile root = new SmbFile(properties.getProperty("path"));
+            goal = Goal.BACKUP;
+        } else if (actionGroup.getSelection().equals(restoreButton.getModel())) {
+            goal = Goal.RESTORE;
+        }
 
-                log.info("Start backup of {}", root);
-                processor.process(root, "/", properties.getProperty("targetId"), true);
-                log.info("Finish backup of {}", root);
-            } catch (Exception ex) {
-                log.error("Oops!", ex);
-            }
+        try {
+            App.processShare(properties, goal);
+        } catch (Exception ex) {
+            log.error("Oops!", ex);
         }
     }//GEN-LAST:event_runButtonMouseClicked
+
+    private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_runButtonActionPerformed
 
     /**
      * @param args the command line arguments

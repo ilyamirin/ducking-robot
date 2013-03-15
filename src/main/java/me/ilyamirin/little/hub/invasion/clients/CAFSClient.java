@@ -8,6 +8,7 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import me.ilyamirin.little.hub.invasion.interaction.Proto;
@@ -25,13 +26,15 @@ import org.codehaus.jackson.map.ObjectMapper;
 @Slf4j
 public class CAFSClient {
 
+    private Properties p;
     private Client client;
 
-    private CAFSClient(Client client1) {
-        this.client = client1;
+    private CAFSClient(Properties p, Client client) {
+        this.p = p;
+        this.client = client;
     }
 
-    public static CAFSClient build() {
+    public static CAFSClient build(Properties p) {
         ObjectMapper mapper = new ObjectMapper();
         //mapper.getDeserializationConfig().addMixInAnnotations(CafsResponse.class, MixIn.class);
         JacksonJaxbJsonProvider provider = new JacksonJaxbJsonProvider(mapper, JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS);
@@ -41,7 +44,7 @@ public class CAFSClient {
         config.getSingletons().add(provider);
         config.getClasses().add(ProtobufMessageBodyWriter.class);
         config.getClasses().add(ProtobufMessageBodyReader.class);
-        return new CAFSClient(Client.create(config));
+        return new CAFSClient(p, Client.create(config));
     }
 
     public void uploadChunks(Collection<FilePartUpload> partUploads, String sessionId) {
@@ -67,7 +70,7 @@ public class CAFSClient {
         Proto.UploadPartsRequest request = requestBuilder.build();
 
         WebResource webResource = client
-                .resource("http://localhost:30001/parts/uploadParts");
+                .resource(p.getProperty("cafs.url").concat("parts/uploadParts"));
 
         CafsResponse res = webResource
                 .queryParam("sessionId", sessionId)
@@ -91,7 +94,7 @@ public class CAFSClient {
         request.setVersion(fileVersion);
 
         WebResource webResource = client
-                .resource("http://localhost:30001/files/create");
+                .resource(p.getProperty("cafs.url").concat("files/create"));
 
         CafsResponse res = webResource
 				.type(MediaType.APPLICATION_JSON)
@@ -108,7 +111,7 @@ public class CAFSClient {
     }
 
     public List<FileVersionIdentifier> getBrokenVersions(String sessionId, String targetId) {
-        WebResource webResource = client.resource("http://localhost:30001/brokenVersions/");
+        WebResource webResource = client.resource(p.getProperty("cafs.url").concat("brokenVersions/"));
 
         log.info("Going to CAFS instance {} and asking him about broken versions list for target {} with sessionId {}",
                 client, targetId, sessionId);

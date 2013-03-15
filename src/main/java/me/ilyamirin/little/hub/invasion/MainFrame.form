@@ -36,10 +36,10 @@
                       <Component id="restoreButton" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="runButton" min="-2" max="-2" attributes="0"/>
-                  <Component id="pathToSambaShareTextField" min="-2" pref="268" max="-2" attributes="0"/>
-                  <Component id="targetUUIDTextField" min="-2" pref="268" max="-2" attributes="0"/>
-                  <Component id="hubPasswordTextField" min="-2" pref="268" max="-2" attributes="0"/>
-                  <Component id="hubUUIDTextField" min="-2" pref="268" max="-2" attributes="0"/>
+                  <Component id="pathToSambaShareTextField" alignment="0" min="-2" pref="268" max="-2" attributes="0"/>
+                  <Component id="targetUUIDTextField" alignment="0" min="-2" pref="268" max="-2" attributes="0"/>
+                  <Component id="hubPasswordTextField" alignment="0" min="-2" pref="268" max="-2" attributes="0"/>
+                  <Component id="hubUUIDTextField" alignment="0" min="-2" pref="268" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="14" max="32767" attributes="0"/>
           </Group>
@@ -52,7 +52,7 @@
               <Component id="hubUUIDTextField" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
               <Component id="hubPasswordTextField" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
               <Component id="targetUUIDTextField" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
               <Component id="pathToSambaShareTextField" min="-2" max="-2" attributes="0"/>
@@ -111,6 +111,7 @@
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="runButtonMouseClicked"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="runButtonActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JRadioButton" name="backUpButton">
