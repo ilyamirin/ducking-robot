@@ -26,10 +26,18 @@ public class SmbProcessor {
     private static final int CHUNK_BUCKET_SIZE = 5;
     private CAFSClient client;
     private SessionHolder sessionHolder;
+    private Cache cache;
 
     private void processFile(SmbFile smbFile, String pathTo, String targetId) throws SmbException, IOException {
         log.info("File {} has been found and he wanna {} bytes of disk space.",
                 smbFile.getName(), smbFile.length());
+
+        String smbFileCacheKey = smbFile.getPath().concat(pathTo).concat(targetId);
+        if (cache.contains(smbFileCacheKey)) {
+            log.info("File {} has been already processed at {}.",
+                    smbFile, cache.get(smbFileCacheKey, Date.class));
+            return;
+        }
 
         //Upload chunks
 
@@ -86,7 +94,9 @@ public class SmbProcessor {
         fileVersion.setChunksCount(totalChunksCount);
         fileVersion.setHashes(null);
 
-        client.createNewFileVersion(fileVersion, sessionHolder.getSessionId());
+        if (client.createNewFileVersion(fileVersion, sessionHolder.getSessionId())) {
+            cache.put(smbFileCacheKey, new Date());
+        }
     }
 
     public void process(SmbFile root, String pathTo, String targetId, boolean isRoot) throws SmbException, IOException {

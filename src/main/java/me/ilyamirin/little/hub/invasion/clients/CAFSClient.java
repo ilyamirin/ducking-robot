@@ -72,24 +72,21 @@ public class CAFSClient {
         WebResource webResource = client
                 .resource("http://localhost:30001/parts/uploadParts");
 
-        ClientResponse res = webResource
+        CafsResponse res = webResource
                 .queryParam("sessionId", sessionId)
                 .type("application/x-protobuf")
-                .post(ClientResponse.class, request);
+                .post(CafsResponse.class, request);
 
-        /*        if (response.getStatus() != 200) {
-         throw new RuntimeException("Failed : HTTP error code : "
-         + response.getStatus());
-         }
+        if (res.hasErrors()) {
+            log.error("Somthing shit happened {}", res.getErrorMessage());
+        } else {
+            log.trace("Done chunk uploading file.");
+        }
 
-         /*        String output = response.getEntityInputStream()
-         log.trace("Output from Server .... \n");
-         log.trace(output);
-         */
         log.trace("Finish uploading {} parts were successfully uploaded.", partUploads.size());
     }
 
-    public void createNewFileVersion(FileVersion fileVersion, String sessionId) {
+    public boolean createNewFileVersion(FileVersion fileVersion, String sessionId) {
         log.info("Creating file {}({})", fileVersion.getFile().getPath(), fileVersion.getChunksCount());
 
         CreateFileVersionRequest request = new CreateFileVersionRequest();
@@ -106,8 +103,10 @@ public class CAFSClient {
         if (res.hasErrors()) {
             log.error("File version {} has not been created yet because: {}",
                     fileVersion, res.getErrorMessage());
+            return false;
         } else {
-            log.info("Done creating file.");
+            log.trace("Done creating file.");
+            return true;
         }
     }
 
