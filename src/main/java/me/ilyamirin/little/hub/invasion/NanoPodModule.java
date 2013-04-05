@@ -6,7 +6,6 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 import java.util.Properties;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import me.ilyamirin.little.hub.invasion.cache.Cache;
 import me.ilyamirin.little.hub.invasion.clients.CAFSClient;
 
 /**
@@ -23,7 +22,6 @@ public class NanoPodModule extends AbstractModule {
     protected void configure() {
         bind(Properties.class).toInstance(p);
         bind(CAFSClient.class).toInstance(CAFSClient.build(p));
-        bind(Cache.class).toInstance(Cache.build());
         bind(XStream.class).toInstance(new XStream(new StaxDriver()));
     }
 

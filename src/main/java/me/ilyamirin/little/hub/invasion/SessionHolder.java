@@ -1,9 +1,9 @@
 package me.ilyamirin.little.hub.invasion;
 
 import com.google.inject.Inject;
-import me.ilyamirin.little.hub.invasion.cache.Cache;
 import java.util.Properties;
 import me.ilyamirin.little.hub.invasion.clients.ConsoleClient;
+import org.joda.time.DateTime;
 
 /**
  *
@@ -13,20 +13,19 @@ public class SessionHolder {
 
     private Properties properties;
     private ConsoleClient client;
-    private Cache cache;
+    private String sessionId;
+    private DateTime sessionExpiration = DateTime.now();
 
     @Inject
-    public SessionHolder(Properties properties, ConsoleClient client, Cache cache) {
+    public SessionHolder(Properties properties, ConsoleClient client) {
         this.properties = properties;
         this.client = client;
-        this.cache = cache;
     }
 
     public String getSessionId() {
-        String sessionId = cache.get("sessionId", String.class);
-        if (sessionId == null || sessionId.isEmpty()) {
+        if (sessionId == null || sessionId.isEmpty() || sessionExpiration.isBeforeNow()) {
             sessionId = client.startSessionForTarget(properties.getProperty("targetId"));
-            cache.put("sessionId", sessionId);
+            sessionExpiration = DateTime.now().plusMinutes(15);
         }
         return sessionId;
     }

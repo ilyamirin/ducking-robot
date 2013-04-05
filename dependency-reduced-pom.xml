@@ -42,7 +42,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>me.ilyamirin.little.hub.invasion.App</mainClass>
+                  <mainClass>me.ilyamirin.little.hub.invasion.NewJFrame</mainClass>
                 </transformer>
               </transformers>
             </configuration>
