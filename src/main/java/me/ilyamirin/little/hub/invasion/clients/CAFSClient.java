@@ -1,5 +1,6 @@
 package me.ilyamirin.little.hub.invasion.clients;
 
+import com.google.common.collect.Lists;
 import com.google.protobuf.ByteString;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -97,8 +98,8 @@ public class CAFSClient {
                 .resource(p.getProperty("cafs.url").concat("files/create"));
 
         CafsResponse res = webResource
-				.type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
                 .put(CafsResponse.class, request);
         if (res.hasErrors()) {
             log.error("File version {} has not been created yet because: {}",
@@ -125,9 +126,36 @@ public class CAFSClient {
             log.error("Oops! {}", response.getErrorMessage());
             return null;
         } else {
-            log.info("{} broken versions have been found.",
-                    response.getEntityFromResponse().getBrokenVersions().size());
+            log.info("{} broken versions have been found.", response.getEntityFromResponse().getBrokenVersions().size());
             return response.getEntityFromResponse().getBrokenVersions();
         }
     }
+
+    public boolean removeBrokenVersionsFromCafsRegistry(String sessionId, FileVersion fileVersion) {
+        UnregisterBrokenVersionRequest request = new UnregisterBrokenVersionRequest();
+
+        request.setSessionId(sessionId);
+        request.setTargetId(fileVersion.getFile().getTargetId());
+        request.setPath(fileVersion.getFile().getPath());
+        request.setVersionId(fileVersion.getVersionId());
+
+        WebResource webResource = client.resource(p.getProperty("cafs.url").concat("brokenVersions/"));
+
+        CafsResponse response = webResource
+                .path("unregister")
+                .type(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .post(CafsResponse.class, request);
+
+        if (response.hasErrors()) {
+            log.error("Oops! {}", response.getErrorMessage());
+            return false;
+
+        } else {
+            log.info("Broken version of file version {} has benn remove successfully.", fileVersion);
+            return true;
+
+        }
+    }
+
 }

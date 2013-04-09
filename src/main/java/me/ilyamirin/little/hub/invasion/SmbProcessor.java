@@ -16,7 +16,7 @@ import me.ilyamirin.little.hub.invasion.interaction.cafs.FileVersion;
 
 /**
  *
- * @author ilamirin
+ * @author ilyamirin
  */
 @Slf4j
 public class SmbProcessor {
